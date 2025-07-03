@@ -1,11 +1,10 @@
-import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import EmailProvider from "next-auth/providers/email"
 import bcrypt from "bcryptjs"
 import { connectToDatabase } from "./mongodb"
 import { User } from "./models/User"
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: any = {
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -50,19 +49,19 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       if (user) {
         token.id = user.id
       }
       return token
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       if (token) {
         session.user.id = token.id as string
       }
       return session
     },
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, account, profile, email, credentials }: { user: any; account: any; profile?: any; email?: any; credentials?: any }) {
       if (account?.provider === "email") {
         await connectToDatabase()
 
